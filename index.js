@@ -87,6 +87,61 @@ if (courseGrid && previousCoursesButton && nextCoursesButton) {
   }
 }
 
+const metricsGrid = document.querySelector(".metrics-grid");
+const previousAnalyticsButton = document.querySelector('[aria-label="Previous analytics"]');
+const nextAnalyticsButton = document.querySelector('[aria-label="Next analytics"]');
+const metricsCarousel = window.jQuery ? window.jQuery(".metrics-grid") : null;
+
+if (metricsGrid && previousAnalyticsButton && nextAnalyticsButton) {
+  if (metricsCarousel?.length && typeof metricsCarousel.owlCarousel === "function") {
+    metricsCarousel.owlCarousel({
+      loop: true,
+      margin: 14,
+      nav: false,
+      dots: false,
+      autoplay: true,
+      autoplayTimeout: 2400,
+      autoplayHoverPause: true,
+      smartSpeed: 450,
+      responsive: {
+        0: {
+          items: 2,
+          margin: 10,
+        },
+        640: {
+          items: 2,
+          margin: 12,
+        },
+        1024: {
+          items: 3,
+        },
+        1280: {
+          items: 4,
+        },
+        1536: {
+          items: 5,
+        },
+      },
+    });
+
+    previousAnalyticsButton.addEventListener("click", () => {
+      metricsCarousel.trigger("prev.owl.carousel");
+    });
+
+    nextAnalyticsButton.addEventListener("click", () => {
+      metricsCarousel.trigger("next.owl.carousel");
+    });
+  } else {
+    previousAnalyticsButton.addEventListener("click", () => {
+      metricsGrid.scrollBy({ left: -300, behavior: "smooth" });
+    });
+
+    nextAnalyticsButton.addEventListener("click", () => {
+      metricsGrid.scrollBy({ left: 300, behavior: "smooth" });
+    });
+  }
+}
+
 const courseCards = document.querySelectorAll(".course-card, .discover-card, .mycourse-card");
 
 const getCourseValue = (card, selector, fallback = "") => {
