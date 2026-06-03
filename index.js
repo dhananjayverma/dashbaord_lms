@@ -193,3 +193,35 @@ if (activityTabs.length > 0 && activityLists.length > 0) {
     });
   });
 }
+
+const metricCards = document.querySelectorAll(".metric-card");
+
+if (metricCards.length > 0) {
+  const closeMetricCards = (activeCard = null) => {
+    metricCards.forEach((card) => {
+      if (card !== activeCard) {
+        card.classList.remove("is-flipped");
+      }
+    });
+  };
+
+  metricCards.forEach((card) => {
+    card.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const shouldFlip = !card.classList.contains("is-flipped");
+      closeMetricCards(card);
+      card.classList.toggle("is-flipped", shouldFlip);
+    });
+
+    card.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        const shouldFlip = !card.classList.contains("is-flipped");
+        closeMetricCards(card);
+        card.classList.toggle("is-flipped", shouldFlip);
+      }
+    });
+  });
+
+  document.addEventListener("click", () => closeMetricCards());
+}
