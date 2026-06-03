@@ -93,7 +93,24 @@ const nextAnalyticsButton = document.querySelector('[aria-label="Next analytics"
 const metricsCarousel = window.jQuery ? window.jQuery(".metrics-grid") : null;
 
 if (metricsGrid && previousAnalyticsButton && nextAnalyticsButton) {
-  if (metricsCarousel?.length && typeof metricsCarousel.owlCarousel === "function") {
+  const initMetricsCarousel = () => {
+    if (!metricsCarousel?.length || typeof metricsCarousel.owlCarousel !== "function") {
+      return;
+    }
+
+    if (window.innerWidth > 820) {
+      if (metricsGrid.classList.contains("owl-loaded")) {
+        metricsCarousel.trigger("destroy.owl.carousel");
+        metricsGrid.classList.remove("owl-loaded", "owl-hidden");
+        metricsGrid.removeAttribute("style");
+      }
+      return;
+    }
+
+    if (metricsGrid.classList.contains("owl-loaded")) {
+      return;
+    }
+
     metricsCarousel.owlCarousel({
       loop: true,
       margin: 14,
@@ -123,13 +140,26 @@ if (metricsGrid && previousAnalyticsButton && nextAnalyticsButton) {
         },
       },
     });
+  };
 
+  initMetricsCarousel();
+  window.addEventListener("resize", initMetricsCarousel);
+
+  if (metricsCarousel?.length && typeof metricsCarousel.owlCarousel === "function") {
     previousAnalyticsButton.addEventListener("click", () => {
-      metricsCarousel.trigger("prev.owl.carousel");
+      if (metricsGrid.classList.contains("owl-loaded")) {
+        metricsCarousel.trigger("prev.owl.carousel");
+      } else {
+        metricsGrid.scrollBy({ left: -300, behavior: "smooth" });
+      }
     });
 
     nextAnalyticsButton.addEventListener("click", () => {
-      metricsCarousel.trigger("next.owl.carousel");
+      if (metricsGrid.classList.contains("owl-loaded")) {
+        metricsCarousel.trigger("next.owl.carousel");
+      } else {
+        metricsGrid.scrollBy({ left: 300, behavior: "smooth" });
+      }
     });
   } else {
     previousAnalyticsButton.addEventListener("click", () => {
